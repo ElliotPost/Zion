@@ -1,86 +1,1471 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Zion | Community Management Bot</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Segoe UI,sans-serif}
-body{background:#050505;color:#fff;overflow-x:hidden}
-.glass-nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:12px 20px;display:flex;gap:25px;z-index:1000}
-.glass-nav a{color:white;text-decoration:none}
-.page{display:none;min-height:100vh;padding:120px 10%}
-.page.active{display:block}
-.hero{min-height:75vh;display:flex;flex-direction:column;justify-content:center;gap:20px}
-.hero h1{font-size:4rem;max-width:700px}
-.hero p{color:#cfcfcf;max-width:700px;line-height:1.7}
-.buttons{display:flex;gap:15px}
-.btn{padding:14px 28px;border-radius:999px;text-decoration:none}
-.primary{background:white;color:black}
-.secondary{border:1px solid rgba(255,255,255,.2);color:white}
-.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:40px}
-.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:25px}
-.page-content{max-width:900px;margin:auto}
-footer{text-align:center;padding:40px;color:#777;margin-top:80px}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,Segoe UI,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#050505;
+    color:white;
+    overflow-x:hidden;
+    line-height:1.7;
+}
+
+/* =========================
+   BACKGROUND EFFECTS
+========================= */
+
+#stars{
+    position:fixed;
+    inset:0;
+    z-index:-3;
+}
+
+#spotlight{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-2;
+    background:
+    radial-gradient(
+        circle 220px at var(--x,50%) var(--y,50%),
+        rgba(255,255,255,.06),
+        transparent
+    );
+}
+
+/* =========================
+   PAGE GLOW
+========================= */
+
+body::before{
+    content:"";
+    position:fixed;
+
+    width:700px;
+    height:700px;
+
+    left:-250px;
+    top:-250px;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(120,180,255,.08),
+        transparent 70%
+    );
+
+    pointer-events:none;
+    z-index:-1;
+}
+
+body::after{
+    content:"";
+    position:fixed;
+
+    width:500px;
+    height:500px;
+
+    right:-150px;
+    bottom:-150px;
+
+    background:
+    radial-gradient(
+        circle,
+        rgba(255,255,255,.04),
+        transparent 70%
+    );
+
+    pointer-events:none;
+    z-index:-1;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.glass-nav{
+
+    position:fixed;
+
+    top:18px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    display:flex;
+    align-items:center;
+
+    gap:6px;
+
+    padding:8px;
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    border-radius:999px;
+
+    z-index:1000;
+}
+
+.nav-pill{
+
+    position:absolute;
+
+    height:42px;
+
+    border-radius:999px;
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:
+        0 0 20px rgba(255,255,255,.08),
+        inset 0 0 15px rgba(255,255,255,.05);
+
+    transition:
+        left .35s ease,
+        width .35s ease;
+
+    z-index:-1;
+}
+
+.glass-nav a{
+
+    color:white;
+
+    text-decoration:none;
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    position:relative;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:.25s;
+}
+
+.glass-nav a:hover{
+    opacity:.8;
+}
+
+/* =========================
+   PAGE SYSTEM
+========================= */
+
+.page{
+    display:none;
+
+    min-height:100vh;
+
+    padding:
+        120px
+        10%;
+}
+
+.page.active{
+    display:block;
+}
+
+.fade-page{
+    animation:fadeIn .35s ease;
+}
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+    }
+
+    to{
+        opacity:1;
+    }
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+
+    min-height:75vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+.online-badge{
+
+    display:inline-block;
+
+    width:max-content;
+
+    padding:
+        5px
+        12px;
+
+    border-radius:999px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    margin-bottom:18px;
+}
+
+.hero h1{
+
+    font-size:4.5rem;
+
+    line-height:1.05;
+
+    max-width:900px;
+
+    background:
+    linear-gradient(
+        90deg,
+        white,
+        #dce7ff
+    );
+
+    -webkit-background-clip:text;
+
+    color:transparent;
+}
+
+.hero p{
+
+    margin-top:18px;
+
+    color:#d0d0d0;
+
+    max-width:850px;
+
+    font-size:1.15rem;
+}
+
+.button-row{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-top:25px;
+
+    flex-wrap:wrap;
+}
+
+.btn{
+
+    padding:
+        14px
+        28px;
+
+    border-radius:999px;
+
+    text-decoration:none;
+
+    transition:.25s;
+}
+
+.btn-primary{
+
+    background:white;
+
+    color:black;
+
+    font-weight:700;
+}
+
+.btn-secondary{
+
+    border:
+        1px solid
+        rgba(255,255,255,.15);
+
+    color:white;
+}
+
+.btn:hover{
+
+    transform:
+        translateY(-3px);
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section{
+
+    margin-top:100px;
+}
+
+.section h2{
+
+    font-size:2rem;
+
+    margin-bottom:20px;
+}
+
+.section p{
+
+    color:#cfcfcf;
+
+    max-width:900px;
+}
+
+/* =========================
+   FEATURE CARDS
+========================= */
+
+.features{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(250px,1fr)
+        );
+
+    gap:20px;
+}
+
+.card{
+
+    background:
+        rgba(255,255,255,.05);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    backdrop-filter:
+        blur(12px);
+
+    border-radius:24px;
+
+    padding:25px;
+
+    transition:.3s;
+}
+
+.card:hover{
+
+    transform:
+        translateY(-8px);
+
+    border-color:
+        rgba(255,255,255,.18);
+}
+
+.card h3{
+    margin-bottom:10px;
+}
+
+.card p{
+    color:#d0d0d0;
+}
+
+/* =========================
+   SCROLL REVEAL
+========================= */
+
+.reveal{
+
+    opacity:0;
+
+    transform:
+        translateY(40px);
+
+    transition:
+        opacity .8s ease,
+        transform .8s ease;
+}
+
+.reveal.show{
+
+    opacity:1;
+
+    transform:
+        translateY(0);
+}
+
+/* =========================
+   CONTENT PAGES
+========================= */
+
+.page-content{
+
+    max-width:1000px;
+
+    margin:auto;
+}
+
+.page-content h1{
+
+    margin-bottom:25px;
+}
+
+.page-content h2{
+
+    margin-top:30px;
+    margin-bottom:10px;
+}
+
+.page-content p{
+
+    color:#d0d0d0;
+
+    margin-bottom:15px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+
+    margin-top:120px;
+
+    padding:40px;
+
+    text-align:center;
+
+    color:#777;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:768px){
+
+    .hero h1{
+        font-size:2.8rem;
+    }
+
+    .glass-nav{
+
+        width:95%;
+
+        justify-content:center;
+
+        overflow:auto;
+    }
+
+    .page{
+
+        padding:
+            120px
+            7%;
+    }
+}
+
 </style>
 </head>
+
 <body>
 
+<canvas id="stars"></canvas>
+
+<div id="spotlight"></div>
+
 <nav class="glass-nav">
-<a href="#" onclick="showPage('home')">Home</a>
-<a href="#" onclick="showPage('invite')">Invite</a>
-<a href="#" onclick="showPage('tos')">TOS</a>
-<a href="#" onclick="showPage('privacy')">Privacy Policy</a>
+
+    <div class="nav-pill"></div>
+
+    <a data-page="home">Home</a>
+
+    <a data-page="invite">Invite</a>
+
+    <a data-page="tos">TOS</a>
+
+    <a data-page="privacy">Privacy Policy</a>
+
 </nav>
+<!-- =========================
+     HOME PAGE
+========================= -->
 
 <section id="home" class="page active">
-<div class="hero">
-<h1>Manage your community with confidence.</h1>
-<p>Zion is a modern Discord community management bot built to help server owners automate moderation, manage members, organize roles, and keep communities running smoothly.</p>
-<div class="buttons">
-<a href="#" class="btn primary">Add Zion</a>
-<a href="#" class="btn secondary">Dashboard</a>
-</div>
-</div>
 
-<h2>Features</h2>
-<div class="features">
-<div class="card"><h3>Automated Moderation</h3><p>Smart moderation tools that help keep your community safe.</p></div>
-<div class="card"><h3>Welcome & Onboarding</h3><p>Give new members a smooth introduction.</p></div>
-<div class="card"><h3>Role Management</h3><p>Easily manage permissions and reaction roles.</p></div>
-<div class="card"><h3>Community Utilities</h3><p>Logging, automation and announcements.</p></div>
-</div>
+    <div class="hero reveal show">
 
-<footer>Copyright © Zion Bot 2026</footer>
+        <div class="online-badge">
+            ● Zion Online
+        </div>
+
+        <h1>
+            Manage your community
+            with confidence.
+        </h1>
+
+        <p>
+            Zion is a next-generation community management bot
+            built for modern Discord servers.
+            From moderation and onboarding to automation and
+            server organization, Zion helps communities thrive.
+        </p>
+
+        <div class="button-row">
+
+            <a
+                href="https://discord.com/oauth2/authorize?client_id=1469912056634409093"
+                class="btn btn-primary"
+            >
+                Invite Zion
+            </a>
+
+            <a
+                href="#features"
+                class="btn btn-secondary"
+            >
+                Learn More
+            </a>
+
+        </div>
+
+    </div>
+
+    <div id="features" class="section reveal">
+
+        <h2>Core Features</h2>
+
+        <div class="features">
+
+            <div class="card">
+                <h3>🛡️ Smart Moderation</h3>
+                <p>
+                    Automatically handle spam,
+                    raids, unwanted content,
+                    and disruptive behavior.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>👋 Welcome Systems</h3>
+                <p>
+                    Give new members a great first impression
+                    with customizable onboarding.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🎭 Role Management</h3>
+                <p>
+                    Reaction roles, auto roles,
+                    and permission organization
+                    made simple.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>📜 Audit Logging</h3>
+                <p>
+                    Track moderation actions,
+                    channel updates,
+                    joins, leaves and more.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="section reveal">
+
+        <h2>Built For Communities</h2>
+
+        <p>
+            Whether you're running a gaming server,
+            creator community, study group,
+            friend group or large public network,
+            Zion scales with your needs.
+        </p>
+
+    </div>
+
+    <div class="section reveal">
+
+        <h2>Why Choose Zion?</h2>
+
+        <p>
+            Zion focuses on making community management
+            straightforward and efficient.
+            Instead of juggling dozens of bots,
+            Zion aims to provide everything you need
+            in one clean package.
+        </p>
+
+    </div>
+
+    <div class="section reveal">
+
+        <h2>Future Plans</h2>
+
+        <div class="features">
+
+            <div class="card">
+                <h3>📊 Analytics</h3>
+                <p>
+                    Server growth insights
+                    and community statistics.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🎫 Tickets</h3>
+                <p>
+                    Powerful support ticket systems
+                    for communities.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ Workflows</h3>
+                <p>
+                    Automated actions
+                    and server management tools.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🤖 Advanced Automod</h3>
+                <p>
+                    AI-assisted moderation
+                    and smarter filtering.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+
+        Copyright © 2026 Zion Bot
+
+    </footer>
+
 </section>
+
+<!-- =========================
+     INVITE PAGE
+========================= -->
 
 <section id="invite" class="page">
-<div class="page-content">
-<h1>Invite Zion</h1>
-<p>Add Zion to your Discord server and start using powerful community tools.</p>
-</div>
+
+    <div class="page-content">
+
+        <h1>Invite Zion</h1>
+
+        <p>
+            Ready to simplify your community management?
+        </p>
+
+        <p>
+            Add Zion to your Discord server and
+            gain access to moderation tools,
+            onboarding systems, logging,
+            automation features and more.
+        </p>
+
+        <br>
+
+        <a
+            href="https://discord.com/oauth2/authorize?client_id=1469912056634409093"
+            class="btn btn-primary"
+        >
+            Add Zion To Server
+        </a>
+
+    </div>
+
 </section>
+
+<!-- =========================
+     TERMS OF SERVICE
+========================= -->
 
 <section id="tos" class="page">
-<div class="page-content">
-<h1>Terms of Service</h1>
-<p>Replace this with your final Terms of Service before launch.</p>
-</div>
+
+    <div class="page-content">
+
+        <h1>Terms of Service</h1>
+
+        <p>
+            Effective Date: June 2026
+        </p>
+
+        <h2>Acceptance of Terms</h2>
+
+        <p>
+            By inviting, using, or interacting with Zion,
+            you agree to these Terms of Service.
+        </p>
+
+        <h2>User Responsibilities</h2>
+
+        <p>
+            Users must comply with
+            Discord's Terms of Service,
+            Community Guidelines,
+            and applicable laws.
+        </p>
+
+        <p>
+            Users may not:
+        </p>
+
+        <p>
+            • Abuse Zion's services<br>
+            • Attempt to exploit vulnerabilities<br>
+            • Use Zion for malicious purposes<br>
+            • Interfere with the operation of the bot
+        </p>
+
+        <h2>Availability</h2>
+
+        <p>
+            Zion is provided on an "as-is" basis.
+            While reliability is a priority,
+            uptime cannot be guaranteed.
+        </p>
+
+        <h2>Service Changes</h2>
+
+        <p>
+            Features may be added,
+            modified or removed at any time
+            without prior notice.
+        </p>
+
+        <h2>Limitation of Liability</h2>
+
+        <p>
+            The developers of Zion are not liable for:
+        </p>
+
+        <p>
+            • Service interruptions<br>
+            • Data loss<br>
+            • Configuration mistakes<br>
+            • Indirect damages resulting from usage
+        </p>
+
+        <h2>Termination</h2>
+
+        <p>
+            Access to Zion may be revoked
+            if abuse, malicious activity,
+            or violations of these Terms occur.
+        </p>
+
+        <h2>Updates</h2>
+
+        <p>
+            Continued use of Zion after updates
+            constitutes acceptance of the revised Terms.
+        </p>
+
+    </div>
+
 </section>
 
+<!-- =========================
+     PRIVACY POLICY
+========================= -->
+
 <section id="privacy" class="page">
-<div class="page-content">
-<h1>Privacy Policy</h1>
-<p>Replace this with your final Privacy Policy before launch.</p>
-</div>
+
+    <div class="page-content">
+
+        <h1>Privacy Policy</h1>
+
+        <p>
+            Effective Date: June 2026
+        </p>
+
+        <h2>Information Stored</h2>
+
+        <p>
+            Zion may store:
+        </p>
+
+        <p>
+            • Server IDs<br>
+            • Channel IDs<br>
+            • Role IDs<br>
+            • Configuration settings<br>
+            • Moderation settings
+        </p>
+
+        <h2>Information Not Stored</h2>
+
+        <p>
+            Zion does not intentionally store:
+        </p>
+
+        <p>
+            • Passwords<br>
+            • Discord tokens<br>
+            • Payment information<br>
+            • Private messages
+        </p>
+
+        <h2>How Data Is Used</h2>
+
+        <p>
+            Data is used solely to provide
+            functionality, maintain configurations,
+            and improve reliability.
+        </p>
+
+        <h2>Third Parties</h2>
+
+        <p>
+            Zion does not sell user data
+            to third parties.
+        </p>
+
+        <h2>Data Removal</h2>
+
+        <p>
+            Server owners may remove stored data
+            by removing Zion from their server
+            or contacting support.
+        </p>
+
+    </div>
+
 </section>
 
 <script>
-function showPage(pageId){
-document.querySelectorAll('.page').forEach(page=>page.classList.remove('active'));
-document.getElementById(pageId).classList.add('active');
-window.scrollTo({top:0,behavior:'smooth'});
+  /* =========================
+   PAGE SWITCHING
+========================= */
+
+const pages =
+document.querySelectorAll(".page");
+
+const navLinks =
+document.querySelectorAll(
+".glass-nav a"
+);
+
+const pill =
+document.querySelector(
+".nav-pill"
+);
+
+function movePill(el){
+
+    pill.style.width =
+    el.offsetWidth + "px";
+
+    pill.style.left =
+    el.offsetLeft + "px";
 }
+
+movePill(navLinks[0]);
+
+function showPage(pageId){
+
+    pages.forEach(page=>{
+
+        page.classList.remove(
+            "active",
+            "fade-page"
+        );
+
+    });
+
+    navLinks.forEach(link=>{
+
+        link.classList.remove(
+            "active"
+        );
+
+    });
+
+    const targetPage =
+    document.getElementById(
+        pageId
+    );
+
+    targetPage.classList.add(
+        "active",
+        "fade-page"
+    );
+
+    const activeLink =
+    document.querySelector(
+        `[data-page="${pageId}"]`
+    );
+
+    activeLink.classList.add(
+        "active"
+    );
+
+    movePill(activeLink);
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+navLinks.forEach(link=>{
+
+    link.addEventListener(
+        "click",
+        ()=>{
+
+            showPage(
+                link.dataset.page
+            );
+
+        }
+    );
+
+});
+
+/* =========================
+   SCROLL REVEAL
+========================= */
+
+const observer =
+new IntersectionObserver(
+
+(entries)=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.classList.add(
+"show"
+);
+
+}
+
+});
+
+},
+
+{
+threshold:0.15
+}
+
+);
+
+document
+.querySelectorAll(".reveal")
+.forEach(el=>{
+
+observer.observe(el);
+
+});
+
+/* =========================
+   MOUSE SPOTLIGHT
+========================= */
+
+document.addEventListener(
+"mousemove",
+(e)=>{
+
+document.documentElement
+.style.setProperty(
+"--x",
+e.clientX + "px"
+);
+
+document.documentElement
+.style.setProperty(
+"--y",
+e.clientY + "px"
+);
+
+}
+);
+
+/* =========================
+   CONSTELLATION SYSTEM
+========================= */
+
+const canvas =
+document.getElementById(
+"stars"
+);
+
+const ctx =
+canvas.getContext("2d");
+
+function resizeCanvas(){
+
+canvas.width =
+window.innerWidth;
+
+canvas.height =
+window.innerHeight;
+
+}
+
+resizeCanvas();
+
+window.addEventListener(
+"resize",
+resizeCanvas
+);
+
+/* =========================
+   STAR CREATION
+========================= */
+
+const stars = [];
+
+const PERMANENT_STARS = 60;
+
+const MAX_DYNAMIC_STARS = 30;
+
+for(
+let i = 0;
+i < PERMANENT_STARS;
+i++
+){
+
+stars.push({
+
+x:
+Math.random()
+*
+window.innerWidth,
+
+y:
+Math.random()
+*
+window.innerHeight,
+
+vx:
+(
+Math.random()
+-
+0.5
+)
+*
+0.15,
+
+vy:
+(
+Math.random()
+-
+0.5
+)
+*
+0.15,
+
+dynamic:false,
+
+age:0
+
+});
+
+}
+
+/* =========================
+   CLICK TO CREATE STARS
+========================= */
+
+document.addEventListener(
+"click",
+(e)=>{
+
+stars.push({
+
+x:e.clientX,
+
+y:e.clientY,
+
+vx:0,
+
+vy:0,
+
+dynamic:true,
+
+age:Date.now(),
+
+radius:0
+
+});
+
+const dynamicStars =
+stars.filter(
+s=>s.dynamic
+);
+
+if(
+dynamicStars.length
+>
+MAX_DYNAMIC_STARS
+){
+
+let oldestIndex =
+stars.findIndex(
+s=>s.dynamic
+);
+
+if(
+oldestIndex !== -1
+){
+
+stars.splice(
+oldestIndex,
+1
+);
+
+}
+
+}
+
+}
+);
+
+/* =========================
+   DRAW LOOP
+========================= */
+
+function animate(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+/* move stars */
+
+stars.forEach(star=>{
+
+star.x += star.vx;
+star.y += star.vy;
+
+if(
+star.x < 0
+||
+star.x > canvas.width
+){
+star.vx *= -1;
+}
+
+if(
+star.y < 0
+||
+star.y > canvas.height
+){
+star.vy *= -1;
+}
+
+});
+
+/* connections */
+
+for(
+let i=0;
+i<stars.length;
+i++
+){
+
+for(
+let j=i+1;
+j<stars.length;
+j++
+){
+
+const dx =
+stars[i].x
+-
+stars[j].x;
+
+const dy =
+stars[i].y
+-
+stars[j].y;
+
+const distance =
+Math.sqrt(
+dx*dx
++
+dy*dy
+);
+
+if(
+distance < 130
+){
+
+const opacity =
+(
+1
+-
+distance/130
+)
+*
+0.4;
+
+ctx.strokeStyle =
+`rgba(
+120,
+180,
+255,
+${opacity}
+)`;
+
+ctx.lineWidth = 1;
+
+ctx.beginPath();
+
+ctx.moveTo(
+stars[i].x,
+stars[i].y
+);
+
+ctx.lineTo(
+stars[j].x,
+stars[j].y
+);
+
+ctx.stroke();
+
+}
+
+}
+
+}
+
+/* stars */
+
+stars.forEach(star=>{
+
+let connected =
+false;
+
+for(
+let other of stars
+){
+
+if(
+other === star
+) continue;
+
+const d =
+Math.hypot(
+star.x
+-
+other.x,
+
+star.y
+-
+other.y
+);
+
+if(
+d < 130
+){
+
+connected = true;
+
+break;
+
+}
+
+}
+
+if(
+star.radius !== undefined
+&&
+star.radius < 2.4
+){
+
+star.radius += 0.08;
+
+}
+
+ctx.fillStyle =
+connected
+?
+"#9fc9ff"
+:
+"#ffffff";
+
+ctx.beginPath();
+
+ctx.arc(
+
+star.x,
+
+star.y,
+
+star.radius || 2,
+
+0,
+
+Math.PI * 2
+
+);
+
+ctx.fill();
+
+});
+
+requestAnimationFrame(
+animate
+);
+
+}
+
+animate();
+
+/* =========================
+   COMMUNITY NETWORK GROWTH
+========================= */
+
+window.addEventListener(
+"scroll",
+()=>{
+
+const progress =
+
+window.scrollY
+/
+
+(
+document.body.scrollHeight
+-
+window.innerHeight
+);
+
+const targetCount =
+
+60
++
+Math.floor(
+progress * 40
+);
+
+while(
+stars.length
+<
+targetCount
+){
+
+stars.push({
+
+x:
+Math.random()
+*
+window.innerWidth,
+
+y:
+Math.random()
+*
+window.innerHeight,
+
+vx:
+(
+Math.random()
+-
+0.5
+)
+*
+0.15,
+
+vy:
+(
+Math.random()
+-
+0.5
+)
+*
+0.15,
+
+dynamic:false,
+
+age:0
+
+});
+
+}
+
+}
+);
+
+/* =========================
+   SECRET ZION EASTER EGG
+========================= */
+
+let clickCounter = 0;
+
+document.addEventListener(
+"click",
+()=>{
+
+clickCounter++;
+
+if(
+clickCounter === 25
+){
+
+console.log(
+"ZION EASTER EGG ACTIVATED"
+);
+
+/*
+Future upgrade:
+Rearrange stars
+into ZION shape
+for 2 seconds.
+*/
+
+}
+
+}
+);
+
 </script>
 
 </body>
